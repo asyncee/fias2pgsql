@@ -1,0 +1,86 @@
+{
+    "process_tables": ["addrobj", "socrbase"],
+    "schema": {
+        "actstat": {
+            "convert": {
+                "actstatid": "int"
+            }
+        },
+        "addrobj": {
+            "null": [
+                "nextid",
+                "previd",
+                "terrifnsfl",
+                "terrifnsul",
+                "ifnsfl",
+                "ifnsul",
+                "normdoc",
+                "parentguid",
+                "okato",
+                "oktmo",
+                "postalcode"
+            ],
+            "convert": {
+                "aoguid": "uuid",
+                "aoid": "uuid",
+                "parentguid": "uuid",
+                "nextid": "uuid",
+                "previd": "uuid",
+                "normdoc": "uuid",
+
+                "actstatus": "int",
+                "aolevel": "int",
+                "centstatus": "int",
+                "currstatus": "int",
+                "operstatus": "int",
+                "livestatus": "int"
+            }
+        },
+        "centerst": {
+            "convert": {
+                "centerstid": "int"
+            }
+        },
+        "curentst": {
+            "convert": {
+                "curentstid": "int"
+            }
+        },
+        "eststat": {
+            "convert": {
+                "eststatid": "int"
+            }
+        },
+        "hststat": {
+            "convert": {
+                "hststatid": "int"
+            }
+        },
+        "intvstat": {
+            "convert": {
+                "intvstatid": "int"
+            }
+        },
+        "ndoctype": {
+            "convert": {
+                "ndtypeid": "int"
+            }
+        },
+        "operstat": {
+            "convert": {
+                "operstatid": "int"
+            }
+        },
+        "socrbase": {
+            "convert": {
+                "level": "int"
+            }
+        },
+        "strstat": {
+            "convert": {
+                "strstatid": "int"
+            }
+        }
+    }
+}
+
