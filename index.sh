@@ -1,13 +1,10 @@
-
-DB=$1
-
 echo '_______________________НАЧИНАЮ ИМПОРТ ИЗ ФАЙЛОВ__________________'
-bash import.sh $DB
+bash import.sh
 
 echo '_______________________НАЧИНАЮ ОБНОВЛЕНИЕ СХЕМЫ__________________'
-psql -f update_schema.sql -d $DB
+psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DB -f update_schema.sql
 
 echo '_______________________НАЧИНАЮ СОЗДАНИЕ ИНДЕКСОВ_________________'
-psql -f indexes.sql -d $DB
+psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DB -f indexes.sql
 
 echo '_______________________ _________ГОТОВО________ _________________'
