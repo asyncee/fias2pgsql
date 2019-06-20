@@ -34,17 +34,17 @@
 
 Используемые переменные окружения:
 
-`$DB` - имя БД, в которую будет осуществлён импорт
+`$POSTGRES_DB` - имя БД, в которую будет осуществлён импорт
 
-`$USER` - имя юзера, от имени которого будет осуществлён импорт
+`$POSTGRES_USER` - имя юзера, от имени которого будет осуществлён импорт
 
-`$PASSWORD` - пароль к БД
+`$POSTGRES_PASSWORD` - пароль для `$POSTGRES_USER` к БД
 
-`$HOST` - хост БД
+`$POSTGRES_HOST` - хост БД
 
-`$PORT` - порт БД
+`$POSTGRES_PORT` - порт БД
 
-`$PATH_TO_FILES` - путь к файлам *\*.dbf*
+`$PATH_TO_DBF_FILES` - путь к файлам *\*.dbf*
 
 По умолчанию переменные окружения не задаются. Вы их должны указать сами.
 
@@ -58,6 +58,10 @@
 
 
     docker-compose up
+    
+*Замечание*: мы настоятельно рекомендуем Вам отказаться от использования докера на боевом сервере для базы. Если же, Вы 
+принимаете решение использовать докер, ознакомьтесь с [этим](https://ru.stackoverflow.com/questions/712931/%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA-postgresql-%D0%B2-docker/779716#779716) и
+[этим](https://toster.ru/q/534239) материалами. В данном случае, докер -- это возможность быстро опробовать наши утилиты.
 
 2. Вам также потребуется клиент к postgres-11:
 
@@ -66,7 +70,7 @@
     
 В результате, будет доступна утилита `psql`. Присоединиться к БД Вы можете так:
 
-    psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DB
+    psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
  
 3. Скачать [архив](https://fias.nalog.ru/Updates.aspx) с DBF-файлами сайта ФИАС. Он весит примерно 6 ГБ на момент 
 обновления
@@ -74,24 +78,12 @@
 5. ВМЕСТО ПУНКТОВ 4,6,7 (если не требуется пункт 5) можно выполнить (либо использовать кастомные настройки):
 
 
-    DB=test_db 
-    USER=test 
-    PASSWORD=1234
-    HOST=localhost
-    PORT=5432
-    PATH_TO_FILES=/path/to/your/files/
-    ./index.sh
+    POSTGRES_DB=test_db POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_HOST=localhost POSTGRES_PORT=5432 PATH_TO_DBF_FILES=/path/to/your/files/ bash ./index.sh
 
 6. Создать бд и провести начальный импорт данных:
 
 
-    DB=test_db 
-    USER=test 
-    PASSWORD=1234
-    HOST=localhost
-    PORT=5432
-    PATH_TO_FILES=/path/to/your/files/
-    ./import.sh
+    POSTGRES_DB=test_db POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_HOST=localhost POSTGRES_PORT=5432 PATH_TO_DBF_FILES=/path/to/your/files/ bash ./import.sh
 
 7. Если нужно, изменить настройки обновления схемы данных в schema.json и
    выполнить скрипт ``update_schema.py``. Это создаст обновлённый файл
@@ -100,12 +92,12 @@
 8. Обновить схему данных:
 
 
-    psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DB -f update_schema.sql
+    psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$HOST:$POSTGRES_PORT/$POSTGRES_DB -f update_schema.sql
 
 9. Удалить неактуальные данные и создать индексы::
 
 
-    psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DB -f indexes.sql
+    psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB -f indexes.sql
 
 10. Проверить скорость выполнения следующих запросов::
 
