@@ -106,6 +106,7 @@
 
 10. Проверить скорость выполнения следующих запросов::
 
+```
     -- вывести полный адрес
     WITH RECURSIVE child_to_parents AS (
     SELECT addrobj.* FROM addrobj
@@ -119,3 +120,4 @@
 
     -- поиск по части адреса
     SELECT * FROM addrobj WHERE formalname ILIKE '%Ульян%';
+```
