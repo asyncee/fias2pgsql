@@ -46,29 +46,30 @@
 
 `$PATH_TO_DBF_FILES` - путь к файлам *\*.dbf*
 
-По умолчанию переменные окружения не задаются. Вы их должны указать сами.
+По умолчанию переменные окружения не задаются, их необходимо указать самостоятельно.
 
 Алгоритм действий:
 
-1. Развернуть БД postgres. Вы можете это сделать с помощью 
+1. Развернуть БД postgres. Это можно сделать с помощью 
 [docker-compose.yml](https://github.com/Hedgehogues/fias2pgsql/blob/master/docker-compose.yml), который присутствует в 
-репозитории или непосредственно поднять БД руками. Для того, чтобы воспользоваться *docker-compose*, вам потребуется 
-[docker](https://www.docker.com/) и [docker-compose](https://docs.docker.com/compose/install/). Как только Вы его 
-установили, следует, запустить контейнер с postgres-11:
+репозитории или непосредственно поднять БД руками. Для того, чтобы воспользоваться *docker-compose*, потребуется 
+[docker](https://www.docker.com/) и [docker-compose](https://docs.docker.com/compose/install/). После установки следует запустить контейнер с postgres-11:
 
-
+```
     docker-compose up
-    
-*Замечание*: мы настоятельно рекомендуем Вам отказаться от использования докера на боевом сервере для базы. Если же, Вы 
-принимаете решение использовать докер, ознакомьтесь с [этим](https://ru.stackoverflow.com/questions/712931/%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA-postgresql-%D0%B2-docker/779716#779716) и
-[этим](https://toster.ru/q/534239) материалами. В данном случае, докер -- это возможность быстро опробовать наши утилиты.
+```
+
+*Замечание*: настоятельно рекомендуется отказаться от использования докера на боевом сервере для базы. Если 
+всё-таки принято решение использовать докер, ознакомьтесь с [этим](https://ru.stackoverflow.com/questions/712931/%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA-postgresql-%D0%B2-docker/779716#779716) и
+[этим](https://toster.ru/q/534239) материалами. В данном случае докер — возможность быстро опробовать наши утилиты.
 
 2. Вам также потребуется клиент к postgres-11:
 
-
+```
     sudo apt-get install postgresql-client
-    
-В результате, будет доступна утилита `psql`. Присоединиться к БД Вы можете так:
+```
+
+В результате, будет доступна утилита `psql`. Присоединиться к БД можно так:
 
     psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
  
@@ -77,13 +78,15 @@
 4. Распаковать его в любую директорию
 5. ВМЕСТО ПУНКТОВ 4,6,7 (если не требуется пункт 5) можно выполнить (либо использовать кастомные настройки):
 
-
+```
     POSTGRES_DB=test_db POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_HOST=localhost POSTGRES_PORT=5432 PATH_TO_DBF_FILES=/path/to/your/files/ bash ./index.sh
+```
 
 6. Создать бд и провести начальный импорт данных:
 
-
+```
     POSTGRES_DB=test_db POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_HOST=localhost POSTGRES_PORT=5432 PATH_TO_DBF_FILES=/path/to/your/files/ bash ./import.sh
+```
 
 7. Если нужно, изменить настройки обновления схемы данных в schema.json и
    выполнить скрипт ``update_schema.py``. Это создаст обновлённый файл
@@ -91,13 +94,15 @@
 
 8. Обновить схему данных:
 
-
+```
     psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$HOST:$POSTGRES_PORT/$POSTGRES_DB -f update_schema.sql
+```
 
 9. Удалить неактуальные данные и создать индексы::
 
-
+```
     psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB -f indexes.sql
+```
 
 10. Проверить скорость выполнения следующих запросов::
 
