@@ -1,20 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-DB=$1
-echo "++++++++++++++++++ HELLO, DB = $DB"
+echo "++++++++++++++++++ HELLO, DB = $POSTGRES_DB"
 
 echo '++++++++++++++++++ SOCRBASE TABLE CREATED'
-pgdbf _data/SOCRBASE.DBF | iconv -f cp866 -t utf-8 | psql $DB
+echo
+pgdbf $PATH_TO_DBF_FILES/SOCRBASE.DBF | iconv -f cp866 -t utf-8 | psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
 
 echo '++++++++++++++++++ CHECKING ADDROBJ FILES'
-if [ -f ./_data/ADDROB01.DBF ]; then
-   mv ./_data/ADDROB01.DBF ./_data/ADDROBJ.DBF
+if [ -f $PATH_TO_DBF_FILES/ADDROB01.DBF ]; then
+   mv .$PATH_TO_DBF_FILES/ADDROB01.DBF $PATH_TO_DBF_FILES/ADDROBJ.DBF
    echo '++++++++++++++++++ ADDROBJ INITIAL FILE MOVED'
 fi
-pgdbf ./_data/ADDROBJ.DBF | iconv -f cp866 -t utf-8 | psql $DB
+pgdbf $PATH_TO_DBF_FILES/ADDROBJ.DBF | iconv -f cp866 -t utf-8 | psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
 echo '++++++++++++++++++ INITIAL ADDROBJ TABLE CREATED'
 
-for FULLPATH in `find ./_data/ADDROB* -type f`
+
+for FULLPATH in `find $PATH_TO_DBF_FILES/ADDROB* -type f`
 do
     FILE="${FULLPATH##*/}"
     TABLE="${FILE%.*}"
@@ -22,11 +23,11 @@ do
     if [ $TABLE = 'ADDROBJ' ]; then
       echo 'SKIPPING ADDROBJ'
     else
-      pgdbf $FULLPATH | iconv -f cp866 -t utf-8 | psql $DB
+      pgdbf $FULLPATH | iconv -f cp866 -t utf-8 | psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
       echo "++++++++++++++++++ TABLE $TABLE CREATED"
 
       echo "++++++++++++++++++ INSERT $TABLE DATA INTO ADDROBJ"
-      psql -d $DB -c "INSERT INTO addrobj SELECT * FROM $TABLE; DROP TABLE $TABLE;"
+      psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB -c "INSERT INTO addrobj SELECT * FROM $TABLE; DROP TABLE $TABLE;"
     fi
 
 done
