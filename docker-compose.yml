@@ -1,0 +1,14 @@
+version: "3"
+services:
+  db:
+    restart: always
+    image: "postgres:11"
+    container_name: "atm_postgres"
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=test_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data/my_dbdata:/var/lib/postgresql/data

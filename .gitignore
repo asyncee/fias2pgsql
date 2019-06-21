@@ -1,2 +1,3 @@
 *.dbf
 *.dbt
+data/
