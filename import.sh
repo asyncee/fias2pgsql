@@ -1,21 +1,23 @@
 #!/usr/bin/env bash
 
 echo "++++++++++++++++++ HELLO, DB = $POSTGRES_DB"
+PATH_=$PATH_TO_DBF_FILES
+echo "++++++++++++++++++ PATH_TO_FILES = $PATH_"
 
 echo '++++++++++++++++++ SOCRBASE TABLE CREATED'
 echo
-pgdbf $PATH_TO_DBF_FILES/SOCRBASE.DBF | iconv -f cp866 -t utf-8 | psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
+pgdbf $PATH_/SOCRBASE.DBF | iconv -f cp866 -t utf-8 | psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
 
 echo '++++++++++++++++++ CHECKING ADDROBJ FILES'
-if [ -f $PATH_TO_DBF_FILES/ADDROB01.DBF ]; then
-   mv .$PATH_TO_DBF_FILES/ADDROB01.DBF $PATH_TO_DBF_FILES/ADDROBJ.DBF
+if [ -f $PATH_/ADDROB01.DBF ]; then
+   mv .$PATH_/ADDROB01.DBF $PATH_/ADDROBJ.DBF
    echo '++++++++++++++++++ ADDROBJ INITIAL FILE MOVED'
 fi
-pgdbf $PATH_TO_DBF_FILES/ADDROBJ.DBF | iconv -f cp866 -t utf-8 | psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
+pgdbf $PATH_/ADDROBJ.DBF | iconv -f cp866 -t utf-8 | psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
 echo '++++++++++++++++++ INITIAL ADDROBJ TABLE CREATED'
 
 
-for FULLPATH in `find $PATH_TO_DBF_FILES/ADDROB* -type f`
+for FULLPATH in `find $PATH_/ADDROB* -type f`
 do
     FILE="${FULLPATH##*/}"
     TABLE="${FILE%.*}"
