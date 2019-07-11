@@ -44,7 +44,7 @@
 
 `$POSTGRES_PORT` - порт БД
 
-`$PATH_TO_DBF_FILES` - путь к файлам *\*.dbf*
+`$PATH_TO_DBF_FILES` - абсолютный путь к файлам *\*.dbf*
 
 По умолчанию переменные окружения не задаются, их необходимо указать самостоятельно.
 
@@ -79,13 +79,14 @@
 5. ВМЕСТО ПУНКТОВ 4,6,7 (если не требуется пункт 5) можно выполнить (либо использовать кастомные настройки):
 
 ```
-    POSTGRES_DB=test_db POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_HOST=localhost POSTGRES_PORT=5432 PATH_TO_DBF_FILES=/path/to/your/files/ bash ./index.sh
+    POSTGRES_DB=test_db POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_HOST=localhost POSTGRES_PORT=5432 PATH_TO_DBF_FILES=/absolute/path/to/your/files/ bash ./index.sh
 ```
 
 6. Создать бд и провести начальный импорт данных:
 
 ```
-    POSTGRES_DB=test_db POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_HOST=localhost POSTGRES_PORT=5432 PATH_TO_DBF_FILES=/path/to/your/files/ bash ./import.sh
+    POSTGRES_DB=test_db POSTGRES_USER=test POSTGRES_PASSWORD=test POSTGRES_HOST=localhost POSTGRES_PORT=5432 PATH_TO_DBF_FILES=/absolute/path/to/your/files/ bash ./import.sh
+
 ```
 
 7. Если нужно, изменить настройки обновления схемы данных в schema.json и
@@ -95,7 +96,7 @@
 8. Обновить схему данных:
 
 ```
-    psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$HOST:$POSTGRES_PORT/$POSTGRES_DB -f update_schema.sql
+    psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB -f update_schema.sql
 ```
 
 9. Удалить неактуальные данные и создать индексы::
@@ -110,7 +111,7 @@
     -- вывести полный адрес
     WITH RECURSIVE child_to_parents AS (
     SELECT addrobj.* FROM addrobj
-        WHERE aoid = '51f21baa-c804-4737-9d5f-9da7a3bb1598'
+        WHERE aoguid = '0c5b2444-70a0-4932-980c-b4dc0d3f02b5'
     UNION ALL
     SELECT addrobj.* FROM addrobj, child_to_parents
         WHERE addrobj.aoguid = child_to_parents.parentguid
@@ -120,4 +121,20 @@
 
     -- поиск по части адреса
     SELECT * FROM addrobj WHERE formalname ILIKE '%Ульян%';
+```
+
+### Проблемы и ошибки
+
+На текущий момент, во время импорта БД, Вы можете столкнуться с проблемами следующего вида:
+
+```
+> psql:update_schema.sql:48: ERROR:  invalid input syntax for type date: ""
+> LINE 1: UPDATE addrobj SET startdate = NULL WHERE startdate = '';
+
+> NOTICE:  table "addrob??" does not exist, skipping
+
+> psql:indexes.sql:2: ERROR:  extension "pg_trgm" already exists
+
+> psql:.: ERROR:  invalid input syntax for type date: ""
+> LINE 1: UPDATE addrobj SET enddate = NULL WHERE enddate = '';
 ```
