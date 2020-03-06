@@ -74,10 +74,10 @@ sh import_table.sh ROOM
 всё-таки принято решение использовать докер, ознакомьтесь с [этим](https://ru.stackoverflow.com/questions/712931/%D0%97%D0%B0%D0%BF%D1%83%D1%81%D0%BA-postgresql-%D0%B2-docker/779716#779716) и
 [этим](https://toster.ru/q/534239) материалами. В данном случае докер — возможность быстро опробовать наши утилиты.
 
-2. Вам также потребуется клиент к postgres-11:
+2. Вам также потребуется клиент к postgres-11, pgdbf:
 
 ```
-    sudo apt-get install postgresql-client
+    sudo apt-get install postgresql-client pgdbf
 ```
 
 В результате, будет доступна утилита `psql`. Присоединиться к БД можно так:
